@@ -27,7 +27,7 @@ The pipeline automates the migration of VMware VMs to Azure with minimal manual 
 1. Clone the repository
 ```bash
 git clone <repository-url>
-cd azure_migration_dte
+cd azure_migration_vmware
 ```
 
 2. Configure Azure Credentials
@@ -72,7 +72,7 @@ The GitHub workflow orchestrates all phases sequentially. Trigger via:
 ## Project Structure
 
 ```
-azure_migration_dte/
+azure_migration_vmware/
 ├── terraform/                    # Infrastructure as Code
 │   ├── main.tf                  # Main Terraform configuration
 │   ├── variables.tf             # Variable definitions
