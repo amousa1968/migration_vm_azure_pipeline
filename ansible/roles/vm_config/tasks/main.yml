@@ -1,0 +1,13 @@
+---
+# Tasks for configuring VMs post-migration
+- name: Install Azure Monitor Agent
+  include_tasks: monitor_agent.yml
+
+- name: Configure backup
+  include_tasks: backup.yml
+
+- name: Setup security
+  include_tasks: security.yml
+
+- name: Configure networking
+  include_tasks: networking.yml

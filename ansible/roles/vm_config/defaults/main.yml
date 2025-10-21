@@ -1,0 +1,6 @@
+---
+# Default variables for vm_config role
+monitor_agent_package: "AzureMonitorAgent"
+backup_vault: "{{ lookup('env', 'AZURE_BACKUP_VAULT') }}"
+security_baseline: "CIS_Level_1"
+enable_defender: true

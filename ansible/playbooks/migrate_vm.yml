@@ -1,0 +1,29 @@
+---
+- name: Migrate VM to Azure
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  vars:
+    azure_migrate_project: "{{ lookup('env', 'AZURE_MIGRATE_PROJECT') }}"
+    resource_group: "{{ lookup('env', 'AZURE_RESOURCE_GROUP') }}"
+    vm_name: "{{ lookup('env', 'VM_NAME') }}"
+  
+  tasks:
+    - name: Trigger Azure Migrate replication
+      azure.azcollection.azure_rm_migrate_project_machine:
+        resource_group: "{{ resource_group }}"
+        project_name: "{{ azure_migrate_project }}"
+        name: "{{ vm_name }}"
+        state: present
+        enable_replication: true
+        
+    - name: Wait for replication to complete
+      azure.azcollection.azure_rm_migrate_project_machine_info:
+        resource_group: "{{ resource_group }}"
+        project_name: "{{ azure_migrate_project }}"
+        name: "{{ vm_name }}"
+      register: replication_status
+      until: replication_status.migration_state == "Protected"
+      retries: 60
+      delay: 300  # 5 minutes

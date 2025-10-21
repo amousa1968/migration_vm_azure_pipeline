@@ -1,0 +1,31 @@
+---
+# Tasks for generating Terraform configurations
+- name: Create Terraform directory
+  file:
+    path: "{{ terraform_output_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Generate main.tf
+  template:
+    src: main.tf.j2
+    dest: "{{ terraform_output_dir }}/main.tf"
+    mode: '0644'
+
+- name: Generate variables.tf
+  template:
+    src: variables.tf.j2
+    dest: "{{ terraform_output_dir }}/variables.tf"
+    mode: '0644'
+
+- name: Generate terraform.tfvars
+  template:
+    src: terraform.tfvars.j2
+    dest: "{{ terraform_output_dir }}/terraform.tfvars"
+    mode: '0644'
+
+- name: Import existing resources
+  shell: |
+    cd {{ terraform_output_dir }}
+    terraform import azurerm_virtual_machine.{{ vm_name }} /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/virtualMachines/{{ vm_name }}
+  when: import_resources | bool

@@ -1,0 +1,20 @@
+---
+# Tasks for installing and configuring Azure Monitor Agent
+- name: Install Azure Monitor Agent package
+  package:
+    name: "{{ monitor_agent_package }}"
+    state: present
+  when: ansible_os_family in ['RedHat', 'Debian']
+
+- name: Configure Azure Monitor Agent
+  template:
+    src: monitor-config.json.j2
+    dest: /etc/opt/microsoft/azuremonitoragent/config-cache/configchunks.json
+    mode: '0644'
+  notify: restart monitor agent
+
+- name: Ensure Azure Monitor Agent service is running
+  service:
+    name: azuremonitoragent
+    state: started
+    enabled: yes

@@ -1,0 +1,23 @@
+---
+# Tasks for managing Azure Migrate operations
+- name: Verify Azure Migrate prerequisites
+  azure.azcollection.azure_rm_migrate_project_info:
+    resource_group: "{{ resource_group }}"
+    name: "{{ azure_migrate_project }}"
+  register: migrate_project
+
+- name: Check VM replication status
+  azure.azcollection.azure_rm_migrate_project_machine_info:
+    resource_group: "{{ resource_group }}"
+    project_name: "{{ azure_migrate_project }}"
+    name: "{{ vm_name }}"
+  register: vm_status
+
+- name: Start VM replication if not already started
+  azure.azcollection.azure_rm_migrate_project_machine:
+    resource_group: "{{ resource_group }}"
+    project_name: "{{ azure_migrate_project }}"
+    name: "{{ vm_name }}"
+    state: present
+    enable_replication: true
+  when: vm_status.migration_state != "Protected"

@@ -1,0 +1,6 @@
+---
+# Default variables for cutover_tasks role
+dns_resource_group: "{{ resource_group }}"
+dns_zone: "example.com"
+verify_timeout: 300
+verify_retries: 10

@@ -1,0 +1,23 @@
+---
+# Tasks for managing cutover process
+- name: Stop source VM replication
+  azure.azcollection.azure_rm_migrate_project_machine:
+    resource_group: "{{ resource_group }}"
+    project_name: "{{ azure_migrate_project }}"
+    name: "{{ vm_name }}"
+    state: present
+    stop_replication: true
+
+- name: Trigger cutover
+  azure.azcollection.azure_rm_migrate_project_machine:
+    resource_group: "{{ resource_group }}"
+    project_name: "{{ azure_migrate_project }}"
+    name: "{{ vm_name }}"
+    state: present
+    perform_cutover: true
+
+- name: Update DNS records
+  include_tasks: update_dns.yml
+
+- name: Verify connectivity
+  include_tasks: verify_connectivity.yml

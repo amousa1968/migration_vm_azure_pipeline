@@ -1,0 +1,17 @@
+---
+# Tasks for updating DNS records
+- name: Get VM IP address
+  azure.azcollection.azure_rm_publicipaddress_info:
+    resource_group: "{{ resource_group }}"
+    name: "{{ vm_name }}-ip"
+  register: public_ip
+
+- name: Update DNS A record
+  azure.azcollection.azure_rm_dnsrecordset:
+    resource_group: "{{ dns_resource_group }}"
+    zone_name: "{{ dns_zone }}"
+    relative_name: "{{ vm_name }}"
+    record_type: A
+    records:
+      - ipv4_address: "{{ public_ip.publicipaddresses[0].ip_address }}"
+    ttl: 300

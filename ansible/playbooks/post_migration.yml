@@ -1,0 +1,34 @@
+---
+- name: Configure Post-Migration Setup
+  hosts: azure_vms
+  become: true
+  
+  vars:
+    backup_vault: "{{ lookup('env', 'AZURE_BACKUP_VAULT') }}"
+    
+  tasks:
+    - name: Install Azure VM Agent
+      package:
+        name: waagent
+        state: latest
+      when: ansible_os_family == "RedHat" or ansible_os_family == "Debian"
+        
+    - name: Configure Azure Monitor Agent
+      include_role:
+        name: vm_config
+        tasks_from: monitor_agent
+        
+    - name: Register with Azure Backup
+      azure.azcollection.azure_rm_backup_protected_vm:
+        resource_group: "{{ resource_group }}"
+        vault_name: "{{ backup_vault }}"
+        vm_name: "{{ inventory_hostname }}"
+        policy_name: "vm-backup-policy"
+        state: present
+        
+    - name: Enable Azure Defender
+      azure.azcollection.azure_rm_security_assessment:
+        resource_group: "{{ resource_group }}"
+        vm_name: "{{ inventory_hostname }}"
+        name: "enable_endpoint_protection"
+        state: present

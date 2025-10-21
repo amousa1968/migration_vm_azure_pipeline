@@ -1,0 +1,7 @@
+---
+# Default variables for azure_migrate role
+azure_migrate_project: "{{ lookup('env', 'AZURE_MIGRATE_PROJECT') }}"
+resource_group: "{{ lookup('env', 'AZURE_RESOURCE_GROUP') }}"
+location: "eastus2"
+replication_retry_count: 60
+replication_retry_delay: 300  # 5 minutes
