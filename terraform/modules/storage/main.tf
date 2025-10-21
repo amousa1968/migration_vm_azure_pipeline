@@ -4,9 +4,7 @@ resource "azurerm_storage_account" "storage" {
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
-
-  enable_https_traffic_only = true
-  min_tls_version          = "TLS1_2"
+  min_tls_version         = "TLS1_2"
 
   tags = var.tags
 }

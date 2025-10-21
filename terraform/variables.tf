@@ -28,8 +28,8 @@ variable "vnet_address_space" {
 variable "subnet_configs" {
   description = "Configuration for subnets"
   type = list(object({
-    name             = string
-    address_prefixes = list(string)
+    name              = string
+    address_prefixes  = list(string)
     service_endpoints = optional(list(string))
   }))
 }
@@ -48,4 +48,3 @@ variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)
   default     = {}
-}

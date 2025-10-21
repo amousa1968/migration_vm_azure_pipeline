@@ -30,8 +30,8 @@ resource "azurerm_network_security_group" "nsg" {
     name                       = "AllowSSH"
     priority                   = 1001
     direction                  = "Inbound"
-    access                    = "Allow"
-    protocol                  = "Tcp"
+    access                     = "Allow"
+    protocol                   = "Tcp"
     source_port_range         = "*"
     destination_port_range    = "22"
     source_address_prefix     = "*"
@@ -42,8 +42,8 @@ resource "azurerm_network_security_group" "nsg" {
     name                       = "AllowRDP"
     priority                   = 1002
     direction                  = "Inbound"
-    access                    = "Allow"
-    protocol                  = "Tcp"
+    access                     = "Allow"
+    protocol                   = "Tcp"
     source_port_range         = "*"
     destination_port_range    = "3389"
     source_address_prefix     = "*"
