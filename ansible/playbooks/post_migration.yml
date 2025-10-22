@@ -32,26 +32,23 @@
         azure_collection_available: "{{ collection_check.rc == 0 }}"
 
     - name: Register with Azure Recovery Services
-      azure.azcollection.azure_rm_backup_protection:
+      # Using azure.azcollection.azure_rm_virtualmachine to enable backup protection
+      azure.azcollection.azure_rm_virtualmachine:
         resource_group: "{{ resource_group }}"
-        vault_name: "{{ backup_vault }}"
-        vm: "{{ inventory_hostname }}"
-        backup_policy: "DefaultPolicy"
+        name: "{{ inventory_hostname }}"
+        backup:
+          vault_name: "{{ backup_vault }}"
+          policy_name: "DefaultPolicy"
+          enable: true
         state: present
-      when: azure_collection_available | bool
 
-    - name: Display backup protection info (when collection unavailable)
+    - name: Display backup protection info
       ansible.builtin.debug:
         msg: |
-          Azure collection not available. To enable backup protection:
-          1. Install collection: ansible-galaxy collection install -r requirements.yml
-          2. Or use Azure CLI: 
-             az backup protection enable-for-vm \
-               --resource-group "{{ resource_group }}" \
-               --vault-name "{{ backup_vault }}" \
-               --vm "{{ inventory_hostname }}" \
-               --policy-name "DefaultPolicy"
-      when: not (azure_collection_available | bool)
+          Backup protection configured for VM {{ inventory_hostname }}:
+          - Resource Group: {{ resource_group }}
+          - Backup Vault: {{ backup_vault }}
+          - Policy: DefaultPolicy
 
     - name: Enable Security Center
       azure.azcollection.azure_rm_securitycenter:

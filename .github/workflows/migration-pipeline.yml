@@ -65,15 +65,11 @@ jobs:
           pip install "ansible-lint>=6.22.2,<7.0.0"
           pip install "azure-cli-core>=2.40.0"
           
-      - name: Install Ansible Collections
+      - name: Install and Verify Ansible Collection
         run: |
-          cd ansible
-          ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections ansible-galaxy collection install -r requirements.yml --force
-          
-      - name: Verify Collection Installation
-        run: |
+          ansible-galaxy collection install azure.azcollection:1.14.0
           ansible-galaxy collection list azure.azcollection
-          ls -la ~/.ansible/collections/ansible_collections/azure/azcollection
+          ansible-doc -l | grep -i azure.azcollection.azure_rm_virtualmachine
 
       - name: Terraform Format
         run: |
