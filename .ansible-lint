@@ -1,4 +1,6 @@
+---
 # ansible-lint configuration to suppress some strict rules for CI
+# and to map file kinds so schema validation picks the right schema.
 skip_list:
   - var-naming
   - yaml
@@ -11,4 +13,12 @@ skip_list:
   - new-line-at-end-of-file
   - trailing-spaces
   - truthy
-  - no-changed-when
+
+# Help ansible-lint pick the correct schema for non-standard filenames
+kinds:
+  - name: playbook
+    patterns:
+      - "playbooks/*.yml"
+      - "playbooks/*.yaml"
+      - "*.yml"
+      - "*.yaml"
