@@ -106,6 +106,8 @@ jobs:
       - name: Terraform Init
         run: |
           cd terraform
+          echo "Checking for experimental 'optional(' usages in terraform files"
+          grep -nR "optional(" || true
           terraform init
           
       - name: Terraform Plan
