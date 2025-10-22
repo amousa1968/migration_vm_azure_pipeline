@@ -32,11 +32,11 @@
         azure_collection_available: "{{ collection_check.rc == 0 }}"
 
     - name: Register with Azure Recovery Services
-      azure.azcollection.azure_rm_backup_protectionitem:
+      azure.azcollection.azure_rm_backup_protection:
         resource_group: "{{ resource_group }}"
         vault_name: "{{ backup_vault }}"
-        vm_name: "{{ inventory_hostname }}"
-        policy_name: "DefaultPolicy"
+        vm: "{{ inventory_hostname }}"
+        backup_policy: "DefaultPolicy"
         state: present
       when: azure_collection_available | bool
 

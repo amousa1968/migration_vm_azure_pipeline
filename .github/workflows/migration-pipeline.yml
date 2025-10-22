@@ -68,7 +68,12 @@ jobs:
       - name: Install Ansible Collections
         run: |
           cd ansible
-          ansible-galaxy collection install -r requirements.yml --force
+          ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections ansible-galaxy collection install -r requirements.yml --force
+          
+      - name: Verify Collection Installation
+        run: |
+          ansible-galaxy collection list azure.azcollection
+          ls -la ~/.ansible/collections/ansible_collections/azure/azcollection
 
       - name: Terraform Format
         run: |
@@ -78,8 +83,7 @@ jobs:
       - name: Run Ansible Lint
         run: |
           cd ansible
-          ansible-galaxy collection install -r requirements.yml
-          ansible-lint -v
+          ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections ansible-lint -v --offline=false
 
   provision-infrastructure:
     needs: validate
