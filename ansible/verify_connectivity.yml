@@ -1,0 +1,9 @@
+---
+# Stub verify_connectivity playbook
+- name: Verify connectivity placeholder
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Placeholder connectivity check
+      ansible.builtin.debug:
+        msg: "Verify connectivity playbook placeholder"

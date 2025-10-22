@@ -1,0 +1,9 @@
+---
+# Stub security playbook
+- name: Security placeholder
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Placeholder security task
+      ansible.builtin.debug:
+        msg: "Security playbook placeholder"

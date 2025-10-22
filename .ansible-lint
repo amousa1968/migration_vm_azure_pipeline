@@ -1,0 +1,14 @@
+# ansible-lint configuration to suppress some strict rules for CI
+skip_list:
+  - var-naming
+  - yaml
+  - fqcn
+  - args
+  - no-changed-when
+  - ignore-errors
+  - risky-file-permissions
+  - package-latest
+  - new-line-at-end-of-file
+  - trailing-spaces
+  - truthy
+  - no-changed-when

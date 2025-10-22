@@ -1,0 +1,9 @@
+---
+# Stub networking playbook
+- name: Networking placeholder
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Placeholder networking task
+      ansible.builtin.debug:
+        msg: "Networking playbook placeholder"

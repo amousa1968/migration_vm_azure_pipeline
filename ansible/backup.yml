@@ -1,0 +1,9 @@
+---
+# Stub playbook used by CI/lint. Replace with real tasks if needed.
+- name: Backup placeholder
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Placeholder backup task
+      ansible.builtin.debug:
+        msg: "Backup playbook placeholder"
