@@ -20,13 +20,22 @@
         name: vm_config
         tasks_from: monitor_agent
 
-    - name: Register with Azure Recovery Services
-      azure.azcollection.azure_rm_recovery_services_backup_protected_item:
+    - name: Register with Azure Recovery Services (real task)
+      when: use_azure_collection | default(true)
+      azure.azcollection.azure_rm_backup_protected_vm:
         resource_group: "{{ resource_group }}"
         vault_name: "{{ backup_vault }}"
         vm_name: "{{ inventory_hostname }}"
         policy_name: "DefaultPolicy"
         state: present
+
+    - name: Register with Azure Recovery Services (fallback)
+      when: not (use_azure_collection | default(true))
+      ansible.builtin.debug:
+        msg: |
+          The azure.azcollection collection is not in use. To enable backup protection in a real run, install the collection listed in ansible/requirements.yml and run the playbook with use_azure_collection=true.
+          Example CLI equivalent:
+          az backup protection enable-for-vm --resource-group "{{ resource_group }}" --vault-name "{{ backup_vault }}" --vm "{{ inventory_hostname }}" --policy-name "DefaultPolicy"
 
     - name: Enable Security Center
       azure.azcollection.azure_rm_securitycenter:
