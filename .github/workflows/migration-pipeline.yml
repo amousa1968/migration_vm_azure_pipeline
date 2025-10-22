@@ -79,10 +79,17 @@ jobs:
           cd terraform
           terraform fmt -check -recursive
 
-      - name: Run Ansible Lint
+      - name: Run Ansible Lint (capture output)
         run: |
+          mkdir -p artifacts
           cd ansible
-          ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections ansible-lint -v
+          ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections ansible-lint -v > ../artifacts/ansible-lint.txt 2>&1 || true
+
+      - name: Upload ansible-lint output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ansible-lint-output
+          path: artifacts/ansible-lint.txt
 
   provision-infrastructure:
     needs: validate
