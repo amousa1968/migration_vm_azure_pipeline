@@ -17,6 +17,6 @@ skip_list:
 # Help ansible-lint pick the correct schema for non-standard filenames
 kinds:
   - name: playbook
-    patterns:
-      - "ansible/playbooks/*.yml"
-      - "ansible/playbooks/*.yaml"
+    patterns: "ansible/playbooks/*.yml"
+  - name: playbook_yaml
+    patterns: "ansible/playbooks/*.yaml"
