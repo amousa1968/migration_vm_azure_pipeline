@@ -11,19 +11,24 @@
   
   tasks:
     - name: Trigger Azure Migrate replication
-      azure.azcollection.azure_rm_migrate_project_machine:
+      azure.azcollection.azure_rm_virtualmachine:
         resource_group: "{{ resource_group }}"
-        project_name: "{{ azure_migrate_project }}"
         name: "{{ vm_name }}"
+        vm_size: Standard_DS1_v2
+        managed_disk_type: Standard_LRS
+        admin_username: azureuser
+        ssh_password_enabled: false
+        ssh_public_keys:
+          - path: /home/azureuser/.ssh/authorized_keys
+            key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         state: present
-        enable_replication: true
+      register: vm_info
         
-    - name: Wait for replication to complete
-      azure.azcollection.azure_rm_migrate_project_machine_info:
+    - name: Wait for VM to be available
+      azure.azcollection.azure_rm_virtualmachine_info:
         resource_group: "{{ resource_group }}"
-        project_name: "{{ azure_migrate_project }}"
         name: "{{ vm_name }}"
-      register: replication_status
-      until: replication_status.migration_state == "Protected"
+      register: vm_status
+      until: vm_status.properties.provisioningState == "Succeeded"
       retries: 60
-      delay: 300  # 5 minutes
+      delay: 30

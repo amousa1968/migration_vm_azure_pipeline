@@ -1,20 +1,17 @@
 ---
 # Tasks for managing cutover process
-- name: Stop source VM replication
-  azure.azcollection.azure_rm_migrate_project_machine:
+- name: Stop source VM if running
+  azure.azcollection.azure_rm_virtualmachine:
     resource_group: "{{ resource_group }}"
-    project_name: "{{ azure_migrate_project }}"
     name: "{{ vm_name }}"
-    state: present
-    stop_replication: true
+    state: stopped
+  ignore_errors: yes
 
-- name: Trigger cutover
-  azure.azcollection.azure_rm_migrate_project_machine:
+- name: Start migrated VM in Azure
+  azure.azcollection.azure_rm_virtualmachine:
     resource_group: "{{ resource_group }}"
-    project_name: "{{ azure_migrate_project }}"
     name: "{{ vm_name }}"
-    state: present
-    perform_cutover: true
+    state: started
 
 - name: Update DNS records
   include_tasks: update_dns.yml

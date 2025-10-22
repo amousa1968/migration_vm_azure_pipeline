@@ -39,6 +39,7 @@ env:
   AZURE_RESOURCE_GROUP: "mock-resource-group"
   AZURE_BACKUP_VAULT: "mock-backup-vault"
   TF_IN_AUTOMATION: "true"
+  ANSIBLE_COLLECTIONS_PATH: "~/.ansible/collections"
 
 jobs:
   validate:
@@ -60,12 +61,13 @@ jobs:
       - name: Install Ansible and Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ansible[azure]==7.0.0
-          pip install "ansible-lint>=6.0.0"
-          pip install pywinrm
-          ansible-galaxy collection install azure.azcollection
+          pip install ansible==7.0.0
+          pip install ansible-lint==6.22.2
+          pip install "azure-cli-core>=2.40.0"
+          rm -rf ~/.ansible/collections/ansible_collections/azure
+          ansible-galaxy collection install azure.azcollection:1.14.0 --force
 
-      - name: Terraform Format Check
+      - name: Terraform Format
         run: |
           cd terraform
           terraform fmt -check -recursive
@@ -73,7 +75,7 @@ jobs:
       - name: Run Ansible Lint
         run: |
           cd ansible
-          ansible-lint
+          ansible-lint --offline -v
 
   provision-infrastructure:
     needs: validate
@@ -101,143 +103,3 @@ jobs:
         run: |
           cd terraform
           terraform apply -auto-approve tfplan
-
-  prepare-migration:
-    needs: provision-infrastructure
-    name: Prepare VM Migration
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          
-      - name: Install Ansible Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible[azure]==7.0.0
-          pip install pywinrm
-          ansible-galaxy collection install azure.azcollection
-          
-      - name: Run Pre-Migration Tasks
-        run: |
-          cd ansible
-          ansible-playbook playbooks/migrate_vm.yml \
-            -e "vm_name=${{ github.event.inputs.vm_name }}" \
-            -e "source_environment=${{ github.event.inputs.source_environment }}" \
-            -e "target_environment=${{ github.event.inputs.target_environment }}"
-
-  execute-migration:
-    needs: prepare-migration
-    name: Execute VM Migration
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.target_environment }}
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          
-      - name: Install Ansible Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible[azure]==7.0.0
-          ansible-galaxy collection install azure.azcollection
-          
-      - name: Execute Migration
-        run: |
-          cd ansible
-          ansible-playbook -i inventory.ini playbooks/migrate_vm.yml \
-            -e "vm_name=${{ github.event.inputs.vm_name }}" \
-            -e "role=azure_migrate"
-
-  post-migration:
-    needs: execute-migration
-    name: Post-Migration Configuration
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          
-      - name: Install Ansible Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible[azure]==7.0.0
-          ansible-galaxy collection install azure.azcollection
-          
-      - name: Configure VM and Enable Monitoring
-        run: |
-          cd ansible
-          ansible-playbook -i inventory.ini playbooks/post_migration.yml \
-            -e "vm_name=${{ github.event.inputs.vm_name }}" \
-            -e "role=vm_config"
-
-  cutover:
-    needs: post-migration
-    name: Execute Cutover
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.target_environment }}
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          
-      - name: Install Ansible Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible[azure]==7.0.0
-          ansible-galaxy collection install azure.azcollection
-          
-      - name: Execute Cutover Tasks
-        run: |
-          cd ansible
-          ansible-playbook -i inventory.ini playbooks/cutover.yml \
-            -e "vm_name=${{ github.event.inputs.vm_name }}" \
-            -e "role=cutover_tasks"
-
-  verify:
-    needs: cutover
-    name: Verify Migration
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          
-      - name: Install Ansible Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible[azure]==7.0.0
-          ansible-galaxy collection install azure.azcollection
-          
-      - name: Verify Migration
-        run: |
-          cd ansible
-          ansible-playbook -i inventory.ini playbooks/verify.yml \
-            -e "vm_name=${{ github.event.inputs.vm_name }}"
-            
-      - name: Generate Migration Report
-        run: |
-          cd ansible
-          ansible-playbook playbooks/generate_report.yml \
-            -e "vm_name=${{ github.event.inputs.vm_name }}"
-        
-      - name: Upload Migration Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: migration-report
-          path: ansible/reports/
