@@ -83,7 +83,7 @@ jobs:
       - name: Run Ansible Lint
         run: |
           cd ansible
-          ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections ansible-lint -v --offline=false
+          ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections ansible-lint -v
 
   provision-infrastructure:
     needs: validate
