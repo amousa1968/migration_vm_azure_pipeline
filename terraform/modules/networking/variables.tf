@@ -23,7 +23,7 @@ variable "subnet_configs" {
   type = list(object({
     name              = string
     address_prefixes  = list(string)
-    service_endpoints = optional(list(string))
+    service_endpoints = list(string)
   }))
 }
 
