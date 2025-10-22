@@ -12,7 +12,7 @@
     - name: Install Azure VM Agent
       ansible.builtin.package:
         name: waagent
-        state: latest
+        state: present
       when: ansible_os_family in ['RedHat', 'Debian']
 
     - name: Configure Azure Monitor Agent
@@ -23,9 +23,8 @@
     - name: Check if Azure collection is available
       ansible.builtin.command: ansible-galaxy collection list azure.azcollection
       register: collection_check
-      ignore_errors: true
       changed_when: false
-      check_mode: no
+      check_mode: false
 
     - name: Set collection availability fact
       ansible.builtin.set_fact:
@@ -74,3 +73,4 @@
       ansible.builtin.copy:
         dest: "/tmp/migration_reports/{{ inventory_hostname }}.txt"
         content: "Migration post-configuration completed for {{ inventory_hostname }}\n"
+

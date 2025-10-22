@@ -1,29 +1,28 @@
----
 - name: Migrate VM to Azure
   hosts: localhost
   connection: local
   gather_facts: false
-  
+
   vars:
     azure_migrate_project: "{{ lookup('env', 'AZURE_MIGRATE_PROJECT') }}"
     resource_group: "{{ lookup('env', 'AZURE_RESOURCE_GROUP') }}"
     vm_name: "{{ lookup('env', 'VM_NAME') }}"
-  
+
   tasks:
     - name: Trigger Azure Migrate replication
       azure.azcollection.azure_rm_virtualmachine:
         resource_group: "{{ resource_group }}"
         name: "{{ vm_name }}"
-        vm_size: Standard_DS1_v2
-        managed_disk_type: Standard_LRS
-        admin_username: azureuser
+        vm_size: "Standard_DS1_v2"
+        managed_disk_type: "Standard_LRS"
+        admin_username: "azureuser"
         ssh_password_enabled: false
         ssh_public_keys:
           - path: /home/azureuser/.ssh/authorized_keys
             key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         state: present
       register: vm_info
-        
+
     - name: Wait for VM to be available
       azure.azcollection.azure_rm_virtualmachine_info:
         resource_group: "{{ resource_group }}"

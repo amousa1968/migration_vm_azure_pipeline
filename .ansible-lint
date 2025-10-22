@@ -18,7 +18,5 @@ skip_list:
 kinds:
   - name: playbook
     patterns:
-      - "playbooks/*.yml"
-      - "playbooks/*.yaml"
-      - "*.yml"
-      - "*.yaml"
+      - "ansible/playbooks/*.yml"
+      - "ansible/playbooks/*.yaml"
