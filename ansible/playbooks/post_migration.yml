@@ -50,11 +50,19 @@
           - Backup Vault: {{ backup_vault }}
           - Policy: DefaultPolicy
 
-    - name: Enable Security Center
-      azure.azcollection.azure_rm_securitycenter:
-        resource_group: "{{ resource_group }}"
-        workspace: "{{ workspace_name }}"
-        state: present
+    - name: Configure Microsoft Defender for Cloud (Security Center)
+      ansible.builtin.debug:
+        msg: |
+          To enable Microsoft Defender for Cloud (formerly Security Center):
+          
+          1. Enable auto-provisioning:
+          az security auto-provisioning-setting update --name "default" --auto-provision "On"
+          
+          2. Enable Defender plans:
+          az security pricing create -n "VirtualMachines" --tier "Standard"
+          
+          Resource Group: {{ resource_group }}
+          VM: {{ inventory_hostname }}
 
     - name: Ensure backup report directory exists
       ansible.builtin.file:

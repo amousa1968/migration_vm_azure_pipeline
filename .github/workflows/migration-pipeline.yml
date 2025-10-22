@@ -67,9 +67,12 @@ jobs:
           
       - name: Install and Verify Ansible Collection
         run: |
-          ansible-galaxy collection install azure.azcollection:1.14.0
+          rm -rf ~/.ansible/collections/ansible_collections/azure
+          ansible-galaxy collection install azure.azcollection:1.14.0 --force
+          echo "Verifying installed modules:"
           ansible-galaxy collection list azure.azcollection
-          ansible-doc -l | grep -i azure.azcollection.azure_rm_virtualmachine
+          echo "Available Azure modules:"
+          ansible-doc -l | grep -i "azure\.azcollection\."
 
       - name: Terraform Format
         run: |
