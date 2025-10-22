@@ -128,4 +128,13 @@ jobs:
       - name: Terraform Apply
         run: |
           cd terraform
-          terraform apply -auto-approve tfplan
+          if [ "${{ env.CI_MOCK }}" = "true" ]; then
+            echo "CI_MOCK=true: skipping terraform apply (mock plan used). Uploading mock tfplan for inspection."
+            mkdir -p ../artifacts
+            if [ -f tfplan ]; then
+              cp tfplan ../artifacts/tfplan.mock
+            fi
+            ls -l ../artifacts || true
+          else
+            terraform apply -auto-approve tfplan
+          fi
