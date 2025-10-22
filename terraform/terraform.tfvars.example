@@ -1,0 +1,40 @@
+# Resource Group Configuration
+resource_group_name = "my-migration-rg"
+location           = "eastus2"  # Azure region where resources will be created
+
+# Environment Tag
+environment = "dev"  # Options: dev, staging, prod
+
+# Virtual Network Configuration
+vnet_name          = "migration-vnet"
+vnet_address_space = ["10.0.0.0/16"]  # Adjust CIDR block as per your network design
+
+# Subnet Configuration
+subnet_configs = [
+  {
+    name              = "migration-subnet"
+    address_prefixes  = ["10.0.1.0/24"]
+    service_endpoints = ["Microsoft.Storage", "Microsoft.KeyVault"]  # Optional: Remove if not needed
+  },
+  {
+    name              = "management-subnet"
+    address_prefixes  = ["10.0.2.0/24"]
+    service_endpoints = []  # Example with no service endpoints
+  }
+]
+
+# Storage Configuration
+storage_account_name = "migrationstorageacct"  # Must be globally unique
+
+# Backup Configuration
+backup_vault_name = "migration-backup-vault"
+
+# Resource Tags
+tags = {
+  "Environment"     = "dev"
+  "Project"        = "VM-Migration"
+  "Owner"          = "DevOps-Team"
+  "CostCenter"     = "IT-123"
+  "BusinessUnit"   = "IT"
+  "DataClassification" = "Internal"
+}

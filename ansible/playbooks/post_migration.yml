@@ -21,11 +21,11 @@
         tasks_from: monitor_agent
 
     - name: Register with Azure Recovery Services
-      azure.azcollection.azure_rm_recoveryservicesbackupprotecteditem:
+      azure.azcollection.azure_rm_recovery_services_backup_protected_item:
         resource_group: "{{ resource_group }}"
         vault_name: "{{ backup_vault }}"
-        item_name: "{{ inventory_hostname }}"
-        backup_policy_id: "/subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group }}/providers/Microsoft.RecoveryServices/vaults/{{ backup_vault }}/backupPolicies/vm-backup-policy"
+        vm_name: "{{ inventory_hostname }}"
+        policy_name: "DefaultPolicy"
         state: present
 
     - name: Enable Security Center

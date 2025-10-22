@@ -11,7 +11,6 @@ variable "location" {
 variable "environment" {
   description = "Environment name (e.g., prod, dev, staging)"
   type        = string
-  default     = "prod"
 }
 
 variable "vnet_name" {
@@ -22,7 +21,6 @@ variable "vnet_name" {
 variable "vnet_address_space" {
   description = "Address space for the virtual network"
   type        = list(string)
-  default     = ["10.0.0.0/16"]
 }
 
 variable "subnet_configs" {
@@ -47,4 +45,4 @@ variable "backup_vault_name" {
 variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)
-  default     = {}
+}
