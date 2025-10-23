@@ -12,7 +12,7 @@ vnet_address_space = ["10.0.0.0/16"]  # Adjust CIDR block as per your network de
 # Subnet Configuration
 subnet_configs = [
   {
-    name              = "migration-subnet"
+    name              = "migration"
     address_prefixes  = ["10.0.1.0/24"]
     service_endpoints = ["Microsoft.Storage", "Microsoft.KeyVault"]  # Optional: Remove if not needed
   },
@@ -28,6 +28,12 @@ storage_account_name = "migrationstorageacct"  # Must be globally unique
 
 # Backup Configuration
 backup_vault_name = "migration-backup-vault"
+
+# VM Scale Set Configuration
+vm_scale_set_name = "migration-vmss-dev"
+vm_size           = "Standard_DS1_v2"
+admin_username    = "azureuser"
+admin_password    = "ChangeMe123!"  # Change this to a secure password
 
 # Resource Tags
 tags = {
