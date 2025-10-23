@@ -45,7 +45,21 @@ terraform plan -var-file=terraform.tfvars
 terraform apply -var-file=terraform.tfvars
 ```
 
-5. Configure Ansible
+5. Resources Created
+
+The Terraform configuration is valid and includes 18 Azure resources that would be created, including:
+
+- Resource Group
+- Virtual Network and Subnets (dynamic)
+- Network Security Group with RDP/SSH rules
+- Storage Account
+- Recovery Services Vault
+- Backup Policy
+- Linux Virtual Machine Scale Set (2 instances, Ubuntu 18.04-LTS)
+
+The plan use Azure to authentication, and apply the configuration create all necessary infrastructure for VM migration with high availability via VM Scale Set.
+
+6. Configure Ansible
 - Update `ansible/inventory.ini` with on-premises and Azure VM details
 - Ensure SSH keys are set up for passwordless access
 
