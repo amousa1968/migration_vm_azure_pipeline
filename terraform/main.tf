@@ -32,14 +32,14 @@ module "storage" {
 module "compute" {
   source = "./modules/compute"
 
-  vm_scale_set_name  = var.vm_scale_set_name
-  location           = azurerm_resource_group.rg.location
+  vm_scale_set_name   = var.vm_scale_set_name
+  location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  vm_size            = var.vm_size
-  admin_username     = var.admin_username
-  admin_password     = var.admin_password
-  subnet_id          = module.networking.subnet_ids["migration"]
-  tags               = var.tags
+  vm_size             = var.vm_size
+  admin_username      = var.admin_username
+  admin_password      = var.admin_password
+  subnet_id           = module.networking.subnet_ids["migration"]
+  tags                = var.tags
 
   depends_on = [module.networking]
 }
