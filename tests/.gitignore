@@ -1,0 +1,80 @@
+# Test artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Test reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.log
+test-results/
+test-reports/
+
+# Terraform test artifacts
+.terraform/
+terraform.tfstate*
+*.tfplan
+*.tfvars.backup
+
+# Ansible test artifacts
+ansible.retry
+*.retry
+
+# Azure test artifacts
+.azure/
+azure_profile.json
+
+# IDE artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS artifacts
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Log files
+logs/
+*.log
+
+# Screenshots (if any UI tests)
+screenshots/
+
+# Test data
+test_data/
+mock_data/
